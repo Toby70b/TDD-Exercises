@@ -110,11 +110,31 @@ public class CalculatorTest {
 
     }
 
+    //Assuming the value cant be a number
+    @Nested
+    @DisplayName("if a symbol line is provided before the numbers it should be treated as a delimiter")
+    class CustomDelimiterCalculatorTests {
+        @Test
+        @DisplayName("if a symbol line is provided before the numbers it should be treated as a delimiter")
+        void aStringWithASymbolProceedingTheNumbersShouldBeTreatedAsADelimiter() {
+            assertEquals(3, calculator.add("//;\n1;2"));
+        }
+
+        @Test
+        @DisplayName("if a symbol line is provided before the numbers it should be treated as a delimiter")
+        void aCustomDelimiterShouldWorkWithRegularDelimiters() {
+            assertEquals(35, calculator.add("//A\n16A8,7\n4"));
+        }
+
+    }
+
     @Test
     @DisplayName("if a newline is entered between the number it should be treated as a comma")
     void aStringWithANewLineShouldBeTreatedAsAComma() {
         assertEquals(6, calculator.add("1\n2,3"));
     }
+
+
 
 
 

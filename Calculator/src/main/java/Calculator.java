@@ -2,12 +2,22 @@ public class Calculator {
 
     public static final String DELIMITER_REGEX = "[,\n]";
 
-    public int add(String s) {
+    public int add(String string) {
+        String[] values;
 
-        if (s == null || s.isEmpty()) {
+        if (string == null || string.isEmpty()) {
             return 0;
         }
-        String[] values = s.split(DELIMITER_REGEX);
+
+        if(string.startsWith("//")){
+            char customDelimiter = string.charAt(2);
+            string = string.substring(2);
+            values = string.split(DELIMITER_REGEX + "|" + customDelimiter);
+        }
+        else {
+            values = string.split(DELIMITER_REGEX);
+        }
+
         try{
             return sumUpValues(values);
         }
@@ -20,8 +30,15 @@ public class Calculator {
     private int sumUpValues(String[] values) {
         int sum = 0;
         for (String value : values) {
-            sum += Integer.parseInt(value);
+            sum += getIntValueFromString(value);
         }
         return sum;
+    }
+
+    private int getIntValueFromString(String value){
+        if(value.isEmpty()){
+            return 0;
+        }
+        return Integer.parseInt(value);
     }
 }
