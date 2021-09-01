@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Calculator {
 
     public static final String DELIMITER_REGEX = "[,\n]";
@@ -9,19 +11,17 @@ public class Calculator {
             return 0;
         }
 
-        if(string.startsWith("//")){
+        if (string.startsWith("//")) {
             char customDelimiter = string.charAt(2);
             string = string.substring(2);
             values = string.split(DELIMITER_REGEX + "|" + customDelimiter);
-        }
-        else {
+        } else {
             values = string.split(DELIMITER_REGEX);
         }
 
-        try{
+        try {
             return sumUpValues(values);
-        }
-        catch (NumberFormatException ex){
+        } catch (NumberFormatException ex) {
             //would log here if real app
             return -1;
         }
@@ -30,13 +30,26 @@ public class Calculator {
     private int sumUpValues(String[] values) {
         int sum = 0;
         for (String value : values) {
-            sum += getIntValueFromString(value);
+            int intValue = getIntValueFromString(value);
+            if (intValue < 0) {
+                throw new IllegalArgumentException(String.format("Negatives not allowed [%s]", buildExceptionMessage(values)));
+            }
+            sum += intValue;
         }
         return sum;
     }
 
-    private int getIntValueFromString(String value){
-        if(value.isEmpty()){
+    private String buildExceptionMessage(String[] values) {
+        String negativeNumbersString = Arrays.stream(values)
+                .filter(n -> Integer.parseInt(n) < 0)
+                .reduce("", (totalString, value) -> totalString + value +",");
+        //remove trailing comma
+        negativeNumbersString = negativeNumbersString.substring(0, negativeNumbersString.length() - 1);
+        return negativeNumbersString;
+    }
+
+    private int getIntValueFromString(String value) {
+        if (value.isEmpty()) {
             return 0;
         }
         return Integer.parseInt(value);

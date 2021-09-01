@@ -3,7 +3,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CalculatorTest {
     Calculator calculator;
@@ -40,12 +40,6 @@ public class CalculatorTest {
         }
 
         @Test
-        @DisplayName("if -95 is passed it should return -95")
-        void aSingleNumberShouldReturnItself19() {
-            assertEquals(-95, calculator.add("-95"));
-        }
-
-        @Test
         @DisplayName("if 27000 is passed it should return 27000")
         void aSingleNumberShouldReturnItself27() {
             assertEquals(27000, calculator.add("27000"));
@@ -79,49 +73,26 @@ public class CalculatorTest {
         }
 
         @Test
-        @DisplayName("if -5 and 10 is passed it should return 5")
-        void theSumOfMinusFiveAndTenShouldBeFive() {
-            assertEquals(5, calculator.add("-5,10"));
-        }
-
-        @Test
-        @DisplayName("if -10 and -6 is passed it should return -16")
-        void theSumOfMinus10AndMinusSixShouldBeMinusSixteen() {
-            assertEquals(-16, calculator.add("-10,-6"));
-        }
-
-        @Test
         @DisplayName("if 8, 12 and 4 are passed it should return 24")
         void theSumOfNumbersShouldEqualTwentyFour() {
             assertEquals(24, calculator.add("8,12,4"));
         }
 
-        @Test
-        @DisplayName("if 4, 4, 12 and -8 are passed it should return 12")
-        void theSumOfNumbersShouldEqualTwelve() {
-            assertEquals(12, calculator.add("4,4,12,-8"));
-        }
-
-        @Test
-        @DisplayName("if 4, 16, -8, 17, -4, and -65 are passed it should return -40")
-        void theSumOfNumbersShouldEqualMinusForty() {
-            assertEquals(-40, calculator.add("4,16,-8,17,-4,-65"));
-        }
-
     }
 
     //Assuming the value cant be a number
+    //Also if "-" is passed as a symbol any negative numbers passed would be treated as positive
     @Nested
-    @DisplayName("if a symbol line is provided before the numbers it should be treated as a delimiter")
+    @DisplayName("if a symbol is provided on a line before the numbers it should be treated as a delimiter")
     class CustomDelimiterCalculatorTests {
         @Test
-        @DisplayName("if a symbol line is provided before the numbers it should be treated as a delimiter")
+        @DisplayName("if a ; symbol is provided before the numbers and 1 and 2 are passed as the values it should return 3")
         void aStringWithASymbolProceedingTheNumbersShouldBeTreatedAsADelimiter() {
             assertEquals(3, calculator.add("//;\n1;2"));
         }
 
         @Test
-        @DisplayName("if a symbol line is provided before the numbers it should be treated as a delimiter")
+        @DisplayName("if a custom delimiter is provided it should still work with regular delimeters, the sum should return 35")
         void aCustomDelimiterShouldWorkWithRegularDelimiters() {
             assertEquals(35, calculator.add("//A\n16A8,7\n4"));
         }
@@ -135,13 +106,29 @@ public class CalculatorTest {
     }
 
 
+    @Nested
+    @DisplayName("if a negative value is provided anywhere in the sum it should throw an exception")
+    class NegativeValueCalculatorTests {
+        @Test
+        @DisplayName("if the value -1 exists in the string it should throw an exception")
+        void aStringWithANegativeNumberShouldThrowException() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+                calculator.add("4,15,27,-1,17");
+            });
+            String expectedMessage = "Negatives not allowed [-1]";
+            String actualMessage = exception.getMessage();
+            assertTrue(actualMessage.contains(expectedMessage));
+        }
 
-
-
-
-
-
-
+        @Test
+        @DisplayName("if multiple negative values exist in the string it should return a list of all of them")
+        void aStringWithASymbolProceedingTheNumbersShouldBeTreatedAsADelimiter() {
+            Exception exception = assertThrows(IllegalArgumentException.class, () -> calculator.add("4,15,27,-1,17,-4,0,-78"));
+            String expectedMessage = "Negatives not allowed [-1,-4,-78]";
+            String actualMessage = exception.getMessage();
+            assertEquals(expectedMessage,actualMessage);
+        }
+    }
 
 
 }
