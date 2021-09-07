@@ -40,9 +40,9 @@ public class CalculatorTest {
         }
 
         @Test
-        @DisplayName("if 27000 is passed it should return 27000")
-        void aSingleNumberShouldReturnItself27() {
-            assertEquals(27000, calculator.add("27000"));
+        @DisplayName("if 999 is passed it should return 999")
+        void aSingleNumberShouldReturnItself999() {
+            assertEquals(999, calculator.add("999"));
         }
     }
 
@@ -97,7 +97,39 @@ public class CalculatorTest {
             assertEquals(35, calculator.add("//A\n16A8,7\n4"));
         }
 
+        @Test
+        @DisplayName("if a *** symbol is provided before the numbers and 1 and 2 are passed as the values it should return 3")
+        void aStringWithADelimiterLongerThanOneCharacterShouldBeTreatedAsADelimiter() {
+            assertEquals(6, calculator.add("//[***]\n1***2***3"));
+        }
+
     }
+
+    @Nested
+    @DisplayName("if a regex symbol is provided on a line before the numbers it should be treated as a delimiter")
+    class CustomDelimiterRegexValueCalculatorTests {
+        @Test
+        @DisplayName("if a ? symbol is provided before the numbers and 1, 2 and 4 are passed as the values it should return 7")
+        void aStringWithAQuestionMarkDelimiterShouldBeTreatedAsADelimiter() {
+            assertEquals(7, calculator.add("//?\n1?2?4"));
+        }
+
+        @Test
+        @DisplayName("if a * symbol is provided before the numbers and 1, 2 and 5 are passed as the values it should return 8")
+        void aStringWithAAsteriskDelimiterLongerThanOneCharacterShouldBeTreatedAsADelimiter() {
+            assertEquals(8, calculator.add("//*\n1*2*5"));
+        }
+
+        @Test
+        @DisplayName("if a $ symbol is provided before the numbers and 1, 2 and 5 are passed as the values it should return 8")
+        void aStringWithADollarDelimiterLongerThanOneCharacterShouldBeTreatedAsADelimiter() {
+            assertEquals(8, calculator.add("//*\n1*2*5"));
+        }
+
+        ///.... and continuing on
+
+    }
+
 
     @Test
     @DisplayName("if a newline is entered between the number it should be treated as a comma")
@@ -129,6 +161,22 @@ public class CalculatorTest {
             assertEquals(expectedMessage,actualMessage);
         }
     }
+
+    @Nested
+    @DisplayName("if value greater than 1000 is included it should be ignored")
+    class valuesGreaterThanOneThousandCalculatorTests {
+        @Test
+        @DisplayName("if 1001 and 2 are passed it should return 2")
+        void valuesGreaterThanOneThousandShouldBeIgnored() {
+            assertEquals(2, calculator.add("1001,2"));
+        }
+        @Test
+        @DisplayName("if 1000 and 2 are passed it should return 10002")
+        void valuesLessThanOrEqualToOneThousandShouldNotBeIgnored() {
+            assertEquals(1002, calculator.add("1000,2"));
+        }
+    }
+
 
 
 }
