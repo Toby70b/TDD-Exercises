@@ -178,5 +178,39 @@ public class CalculatorTest {
     }
 
 
+    @Nested
+    @DisplayName("Multiple custom delimiters enclosed within square brackets should be supported")
+    class MultipleCustomDelimiterCalculatorTests {
+        @Test
+        @DisplayName("if a * and % symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
+        void aStringWithASymbolProceedingTheNumbersShouldBeTreatedAsADelimiter() {
+            assertEquals(6, calculator.add("//[*][%]\n1*2%3"));
+        }
+
+        @Test
+        @DisplayName("if a * and % symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
+        void sdadsa() {
+            assertEquals(6, calculator.add("//[\n1[2[3"));
+        }
+
+        @Test
+        @DisplayName("if a * and % symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
+        void adsad() {
+            assertEquals(6, calculator.add("//[]\n1[]2[]3"));
+        }
+    }
+
+    @Nested
+    @DisplayName("Multiple custom delimiters of multiple length within square brackets should be supported")
+    class MultipleCustomDelimiterWithMultipleLengthCalculatorTests {
+        @Test
+        @DisplayName("if a * and % symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
+        void aStringWithASymbolProceedingTheNumbersShouldBeTreatedAsADelimiter() {
+            assertEquals(6, calculator.add("//[***][%%]\n1***2%%3"));
+        }
+
+    }
+
+
 
 }

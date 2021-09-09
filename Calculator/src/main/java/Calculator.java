@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Calculator {
@@ -6,24 +8,28 @@ public class Calculator {
     public static final String DELIMITER_REGEX = "[,\n]";
     public static final List<String> REGEX_CHARACTERS = List.of(".", "^", "$", "*", "+", "-", "?", "(", ")", "[", "]", "{", "}", "\\", "|");
 
-    public int add(String string) {
+    public int add(String calculatorString) {
         String[] values;
 
-        if (string == null || string.isEmpty()) {
+        if (calculatorString == null || calculatorString.isEmpty()) {
             return 0;
         }
 
-        if (string.startsWith("//")) {
-            String customDelimiter = createCustomDelimeter(string);
-            //remove preceding //
-            string = string.substring(2);
-            //Crappy fix in refactor
-            string = string.replace("[","");
-            string = string.replace("]","");
-            values = string.split(DELIMITER_REGEX + "|" + customDelimiter);
-
+        if (calculatorString.startsWith("//")) {
+            calculatorString = calculatorString.substring(2);
+            boolean multipleCustomDelimiters = calculatorString.matches("\\[.+\n.*");
+            String[] splitString = calculatorString.split("\n");
+            List<String> customDelimiters;
+            if(multipleCustomDelimiters) {
+                customDelimiters =  processCustomDelimiters(customDelimiters = getCustomerDelimiters(splitString[0]));
+                calculatorString = calculatorString.replace(splitString[0], "");
+            }
+            else {
+                customDelimiters = processCustomDelimiters(Collections.singletonList(splitString[0]));
+            }
+            values = calculatorString.split(buildDelimiterRegex(customDelimiters));
         } else {
-            values = string.split(DELIMITER_REGEX);
+            values = calculatorString.split(DELIMITER_REGEX);
         }
 
         try {
@@ -34,22 +40,48 @@ public class Calculator {
         }
     }
 
-    private String createCustomDelimeter(String string) {
-        String customDelimiter = string.split("\n")[0].substring(2);
-
-        if (multiLengthDelimeter(customDelimiter)) {
-            customDelimiter = customDelimiter.substring(1, customDelimiter.length() - 1);
+    private List<String> processCustomDelimiters(List<String> customDelimiterList) {
+        List<String> escapedCustomDelimiters = new ArrayList<>();
+        for (String customDelimiter : customDelimiterList) {
+            if (containsRegexCharacters(customDelimiter)) {
+                escapedCustomDelimiters.add(escapeCustomDelimeter(customDelimiter));
+            }
+            else {
+                escapedCustomDelimiters.add(customDelimiter);
+            }
         }
-        if (containsRegexCharacters(customDelimiter)) {
-            customDelimiter =  escapeCustomDelimeter(customDelimiter);
-        }
-        return customDelimiter;
+        return escapedCustomDelimiters;
     }
 
-    private boolean multiLengthDelimeter(String customDelimiter) {
-        return customDelimiter.startsWith("[") && customDelimiter.endsWith("]");
+    private String buildDelimiterRegex(List<String> escapeCustomDelimiters) {
+        StringBuilder delimiterRegex = new StringBuilder(DELIMITER_REGEX + "|");
+        for (String string:escapeCustomDelimiters) {
+            delimiterRegex.append(string);
+            delimiterRegex.append("|");
+        }
+        return delimiterRegex.substring(0, delimiterRegex.length()-1);
     }
 
+    private List<String> getCustomerDelimiters(String delimiterLine) {
+        List<String> customDelimiters = new ArrayList<>();
+        char[] chars = delimiterLine.toCharArray();
+        StringBuilder customDelimiter = new StringBuilder();
+        for (char aChar : chars) {
+            switch (aChar) {
+                case '[':
+                    break;
+                case ']':
+                    customDelimiters.add(customDelimiter.toString());
+                    customDelimiter = new StringBuilder();
+                    break;
+                default:
+                    customDelimiter.append(aChar);
+            }
+        }
+
+        return customDelimiters;
+    }
+    
     private boolean containsRegexCharacters(String string) {
         return string.matches(".*[.^$*+\\-?()\\[\\]{}|].*");
     }
