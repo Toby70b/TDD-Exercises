@@ -48,6 +48,8 @@ public class Greeting {
             return "";
         } else if (upperCaseNames.size() == 1) {
             return shoutSingleName(upperCaseNames.get(0));
+        } else if (upperCaseNames.size() == 2) {
+            return "HELLO " + upperCaseNames.get(0) + " AND " + upperCaseNames.get(1) + "!";
         }
         return buildUpperCaseGreeting(upperCaseNames);
     }

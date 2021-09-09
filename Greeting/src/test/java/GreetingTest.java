@@ -63,7 +63,14 @@ public class GreetingTest {
         @Test
         @DisplayName("Allow mixing of greetings and shouts with two shouts")
         void returnMixedGreetingAndShoutWithMultipleShouts() {
-            assertEquals("Hello, Amy and Charlotte. AND HELLO BRIAN, AND TOM!", greeting.greet(new String[]{"Amy", "BRIAN", "TOM", "Charlotte"}));
+            assertEquals("Hello, Amy and Charlotte. AND HELLO BRIAN AND TOM!", greeting.greet(new String[]{"Amy", "BRIAN", "TOM", "Charlotte"}));
+        }
+
+
+        @Test
+        @DisplayName("Allow mixing of greetings and shouts with two shouts")
+        void dsadsa() {
+            assertEquals("Hello, Amy and Charlotte. AND HELLO BRIAN, TOM, AND SAM!", greeting.greet(new String[]{"Amy", "BRIAN", "TOM", "SAM", "Charlotte"}));
         }
 
     }
