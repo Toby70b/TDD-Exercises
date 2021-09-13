@@ -12,21 +12,21 @@ public class Greeting {
     /**
      * returns a greeting string containing the names passed in the parameter, in the form "Hello,
      * {@literal <}name{@literal >}."<br/><br/>
-     *
+     * <p>
      * If null is passed it will return a default greeting "Hello, my friend"<br/><br/>
-     *
+     * <p>
      * If multiple values are passed it will return each seperated with an oxford comma.
      * The final name will also be prefixed with "and". For example "Hello, Billy, Tony, and Emily"<br/><br/>
-     *
+     * <p>
      * If a name is fully capitalised then a shout greeting will be returned instead. A shout is
      * of the format "HELLO {@literal <}name{@literal >}! <br/><br/>
-     *
+     * <p>
      * Capitalised and non-capitalised names can be used in the same array. This will be treated as a "mixed" greeting.
      * Mixed Greetings will first greet the non-capitalised names before "shouting" the capitalised names. For example
      * "Hello, Amy and Charlotte. AND HELLO BRIAN AND TOM!"<br/><br/>
-     *
+     * <p>
      * If a name contains a comma the name will be split with the comma acting as the delimiter<br/><br/>
-     *
+     * <p>
      * Strings surrounded in escaped double quotes escaped will be treated as a single name regardless of commas
      *
      * @param names an array of string representing the names to be greeted
@@ -87,9 +87,29 @@ public class Greeting {
         } else if (upperCaseNames.size() == 1) {
             return shoutSingleName(upperCaseNames.get(0));
         } else if (upperCaseNames.size() == 2) {
-            return "HELLO " + upperCaseNames.get(0) + " AND " + upperCaseNames.get(1) + "!";
+            return shoutTwoNames(upperCaseNames);
         }
         return buildShoutGreeting(upperCaseNames);
+    }
+
+    /**
+     * Returns a shout greeting for when only one name is used
+     *
+     * @param name the name to shout
+     * @return a shout greeting
+     */
+    public String shoutSingleName(String name) {
+        return "HELLO " + name + "!";
+    }
+
+    /**
+     * Creates an shout greeting for two names
+     *
+     * @param upperCaseNames an array of uppercase strings to be included in the greeting
+     * @return a String representing the shout greeting
+     */
+    private String shoutTwoNames(List<String> upperCaseNames) {
+        return "HELLO " + upperCaseNames.get(0) + " AND " + upperCaseNames.get(1) + "!";
     }
 
     /**
@@ -121,9 +141,30 @@ public class Greeting {
         } else if (lowerCaseNames.size() == 1) {
             return saySingleName(lowerCaseNames.get(0));
         } else if (lowerCaseNames.size() == 2) {
-            return "Hello, " + lowerCaseNames.get(0) + " and " + lowerCaseNames.get(1) + ".";
+            return sayTwoNames(lowerCaseNames, "Hello, ", " and ", ".");
         }
         return buildLowerCaseGreeting(lowerCaseNames);
+    }
+
+
+    /**
+     * Returns a normal greeting for when only one name is used
+     *
+     * @param name the name to greet
+     * @return a greeting
+     */
+    public String saySingleName(String name) {
+        return "Hello, " + name + ".";
+    }
+
+    /**
+     * Returns a normal greeting with two names
+     *
+     * @param lowerCaseNames an List of strings to greet
+     * @return a normal greeting containing the names from the List parameter
+     */
+    public String sayTwoNames(List<String> lowerCaseNames, String s, String s2, String s3) {
+        return s + lowerCaseNames.get(0) + s2 + lowerCaseNames.get(1) + s3;
     }
 
     /**
@@ -145,25 +186,8 @@ public class Greeting {
     }
 
     /**
-     * Returns a shout greeting for when only one name is used
-     * @param name the name to shout
-     * @return a shout greeting
-     */
-    public String shoutSingleName(String name) {
-        return "HELLO " + name + "!";
-    }
-
-    /**
-     * Returns a normal greeting for when only one name is used
-     * @param name the name to greet
-     * @return a greeting
-     */
-    public String saySingleName(String name) {
-        return "Hello, " + name + ".";
-    }
-
-    /**
      * Removes first and last character from strip, should be used to remove quotes from escaped names
+     *
      * @param name the name with quotes
      * @return the name with quotes removed
      */
@@ -173,6 +197,7 @@ public class Greeting {
 
     /**
      * Splits a string by comma
+     *
      * @param name the name with the comma
      * @return a list of strings split by the comma
      */
