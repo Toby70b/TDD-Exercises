@@ -14,17 +14,17 @@ public class CalculatorTest {
     }
 
     @Nested
-    @DisplayName("If no value is passed it should return zero")
+    @DisplayName("If no value is passed as a parameter it should return zero")
     class NoValueCalculatorTests {
 
         @Test
-        @DisplayName("an empty string should return zero")
+        @DisplayName("an empty string  should return zero")
         void emptyStringShouldReturnZero() {
             assertEquals(0, calculator.add(""));
         }
 
         @Test
-        @DisplayName("a null parameter should return zero")
+        @DisplayName("null should return zero")
         void nullShouldReturnZero() {
             assertEquals(0, calculator.add(null));
         }
@@ -43,6 +43,12 @@ public class CalculatorTest {
         @DisplayName("if 999 is passed it should return 999")
         void aSingleNumberShouldReturnItself999() {
             assertEquals(999, calculator.add("999"));
+        }
+
+        @Test
+        @DisplayName("if 0 is passed it should return 0")
+        void aSingleNumberShouldReturnItself0() {
+            assertEquals(0, calculator.add("0"));
         }
     }
 
@@ -103,6 +109,17 @@ public class CalculatorTest {
             assertEquals(6, calculator.add("//[***]\n1***2***3"));
         }
 
+        @Test
+        @DisplayName("if [] symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
+        void ifSquareBracketsAreUsedAsDelimitersItShouldReturnSumAsExpected() {
+            assertEquals(6, calculator.add("//[]\n1[]2[]3"));
+        }
+
+        @Test
+        @DisplayName("Inner square brackets should be treated as part of the delimiter")
+        void innerSquareBracketsShouldBeTreatedAsPartOfTheDelimiter() {
+            assertEquals(6, calculator.add("//[[***]]\n1[***]2[***]3"));
+        }
     }
 
     @Nested
@@ -116,23 +133,28 @@ public class CalculatorTest {
 
         @Test
         @DisplayName("if a * symbol is provided before the numbers and 1, 2 and 5 are passed as the values it should return 8")
-        void aStringWithAAsteriskDelimiterLongerThanOneCharacterShouldBeTreatedAsADelimiter() {
+        void aStringWithAAsteriskShouldBeTreatedAsADelimiter() {
             assertEquals(8, calculator.add("//*\n1*2*5"));
         }
 
         @Test
         @DisplayName("if a $ symbol is provided before the numbers and 1, 2 and 5 are passed as the values it should return 8")
-        void aStringWithADollarDelimiterLongerThanOneCharacterShouldBeTreatedAsADelimiter() {
+        void aStringWithADollarShouldBeTreatedAsADelimiter() {
             assertEquals(8, calculator.add("//*\n1*2*5"));
         }
 
-        ///.... and continuing on
+        @Test
+        @DisplayName("if a [ and symbol is provided before the numbers and 8,9 and 10 are passed as the values it should return 27")
+        void aStringWithAnOpeningSquareBracketShouldBeTreatedAsADelimiter() {
+            assertEquals(27, calculator.add("//[\n8[9,10"));
+        }
+        ///.... and continuing on...
 
     }
 
 
     @Test
-    @DisplayName("if a newline is entered between the number it should be treated as a comma")
+    @DisplayName("if a newline is entered between the number it should be treated as a delimiter")
     void aStringWithANewLineShouldBeTreatedAsAComma() {
         assertEquals(6, calculator.add("1\n2,3"));
     }
@@ -183,34 +205,12 @@ public class CalculatorTest {
     class MultipleCustomDelimiterCalculatorTests {
         @Test
         @DisplayName("if a * and % symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
-        void aStringWithASymbolProceedingTheNumbersShouldBeTreatedAsADelimiter() {
+        void aStringWithMultipleDelimitersShouldReturnSumAsExpected() {
             assertEquals(6, calculator.add("//[*][%]\n1*2%3"));
         }
-
-        @Test
         @DisplayName("if a * and % symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
-        void sdadsa() {
-            assertEquals(6, calculator.add("//[\n1[2[3"));
-        }
-
-        @Test
-        @DisplayName("if a * and % symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
-        void adsad() {
-            assertEquals(6, calculator.add("//[]\n1[]2[]3"));
+        void aStringWithMultipleDelimitersOfVaryingLengthShouldReturnAsExpected() {
+            assertEquals(15, calculator.add("//[***][%%%%%%]\n1,2%%%%%%3%%%%%%5***4"));
         }
     }
-
-    @Nested
-    @DisplayName("Multiple custom delimiters of multiple length within square brackets should be supported")
-    class MultipleCustomDelimiterWithMultipleLengthCalculatorTests {
-        @Test
-        @DisplayName("if a * and % symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
-        void aStringWithASymbolProceedingTheNumbersShouldBeTreatedAsADelimiter() {
-            assertEquals(6, calculator.add("//[[***]][%%]\n1[***]2%%3"));
-        }
-
-    }
-
-
-
 }

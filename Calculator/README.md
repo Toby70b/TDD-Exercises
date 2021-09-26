@@ -31,7 +31,7 @@ requirements adding questionable features. I suppose at the very least it'll tes
 this solution in the real world before<br/>
 
 As always there was some ambiguity over requirements, for example should the method handle inner square brackets for delimiters? e.g. [[***]]
-I did implement this but may not have been necessary. A problem with these sorts of questionable exercises is that its hard to apply common sense
+I did implement this but may not have been necessary. A problem with these sorts of questionable exercises is that it's hard to apply common sense
 <br/>
 
 I spent a couple evenings working on this, and while there are some cases that won't work (can't declare a newline 
