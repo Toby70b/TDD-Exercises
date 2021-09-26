@@ -1,4 +1,4 @@
-#Greeting Kata TDD Excercise
+# Greeting Kata TDD Excercise
 
 This repository contains my solution for the [Greeting Kata Exercise](https://github.com/testdouble/contributing-tests/wiki/Greeting-Kata)
 
