@@ -206,7 +206,7 @@ public class CalculatorTest {
         @Test
         @DisplayName("if a * and % symbol is provided before the numbers and 1,2 and 3 are passed as the values it should return 6")
         void aStringWithASymbolProceedingTheNumbersShouldBeTreatedAsADelimiter() {
-            assertEquals(6, calculator.add("//[***][%%]\n1***2%%3"));
+            assertEquals(6, calculator.add("//[[***]][%%]\n1[***]2%%3"));
         }
 
     }

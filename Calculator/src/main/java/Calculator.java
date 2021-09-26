@@ -20,11 +20,10 @@ public class Calculator {
             boolean multipleCustomDelimiters = calculatorString.matches("\\[.+\n.*");
             String[] splitString = calculatorString.split("\n");
             List<String> customDelimiters;
-            if(multipleCustomDelimiters) {
-                customDelimiters =  processCustomDelimiters(customDelimiters = getCustomerDelimiters(splitString[0]));
+            if (multipleCustomDelimiters) {
+                customDelimiters = processCustomDelimiters(customDelimiters = getCustomerDelimiters(splitString[0]));
                 calculatorString = calculatorString.replace(splitString[0], "");
-            }
-            else {
+            } else {
                 customDelimiters = processCustomDelimiters(Collections.singletonList(splitString[0]));
             }
             values = calculatorString.split(buildDelimiterRegex(customDelimiters));
@@ -45,8 +44,7 @@ public class Calculator {
         for (String customDelimiter : customDelimiterList) {
             if (containsRegexCharacters(customDelimiter)) {
                 escapedCustomDelimiters.add(escapeCustomDelimeter(customDelimiter));
-            }
-            else {
+            } else {
                 escapedCustomDelimiters.add(customDelimiter);
             }
         }
@@ -55,24 +53,37 @@ public class Calculator {
 
     private String buildDelimiterRegex(List<String> escapeCustomDelimiters) {
         StringBuilder delimiterRegex = new StringBuilder(DELIMITER_REGEX + "|");
-        for (String string:escapeCustomDelimiters) {
+        for (String string : escapeCustomDelimiters) {
             delimiterRegex.append(string);
             delimiterRegex.append("|");
         }
-        return delimiterRegex.substring(0, delimiterRegex.length()-1);
+        return delimiterRegex.substring(0, delimiterRegex.length() - 1);
     }
 
     private List<String> getCustomerDelimiters(String delimiterLine) {
+        int openingBracket = 0;
+        boolean innerBrackets = false;
         List<String> customDelimiters = new ArrayList<>();
         char[] chars = delimiterLine.toCharArray();
         StringBuilder customDelimiter = new StringBuilder();
         for (char aChar : chars) {
             switch (aChar) {
                 case '[':
+                    if (++openingBracket > 1) {
+                        innerBrackets = true;
+                        customDelimiter.append(aChar);
+                    }
                     break;
                 case ']':
-                    customDelimiters.add(customDelimiter.toString());
-                    customDelimiter = new StringBuilder();
+                    if (innerBrackets) {
+                        customDelimiter.append(aChar);
+                    }
+                    if (openingBracket >= 1) {
+                        customDelimiters.add(customDelimiter.toString());
+                        customDelimiter = new StringBuilder();
+                        openingBracket = 0;
+                        innerBrackets = false;
+                    }
                     break;
                 default:
                     customDelimiter.append(aChar);
@@ -81,7 +92,7 @@ public class Calculator {
 
         return customDelimiters;
     }
-    
+
     private boolean containsRegexCharacters(String string) {
         return string.matches(".*[.^$*+\\-?()\\[\\]{}|].*");
     }
