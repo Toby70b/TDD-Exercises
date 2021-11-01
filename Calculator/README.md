@@ -1,4 +1,4 @@
-#Calculator Kata TDD Exercise
+# Calculator Kata TDD Exercise
 
 This repository contains my solution for the [Calculator Kata Exercise](https://osherove.com/tdd-kata-1)
 
