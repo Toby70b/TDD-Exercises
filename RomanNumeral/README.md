@@ -1,4 +1,4 @@
-#Roman numeral TDD Excercise
+# Roman numeral TDD Excercise
 This repository contains my solution for the [Roman numeral exercise](https://github.com/TDD-Katas/roman-numerals#problem-description)
 
 As expected the code has 100% test coverage and every test runs successfully
